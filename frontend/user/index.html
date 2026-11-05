@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="shared/shared.css">
+  <link rel="stylesheet" href="user.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Dynamic Background Canvas & WebGL Aurora Mesh -->
+  <div class="background-canvas">
+    <canvas id="shaderCanvas"></canvas>
+  </div>
+
+  <div class="os-interface">
+    <!-- Top HUD HUD Bar -->
+    <header class="hud-header">
+      <div class="hud-brand" id="hudHomeLink">
+        <div class="brand-logo">GAYATHRI AI</div>
+      </div>
+      
+      <div class="hud-actions">
+        <button class="hud-btn" id="paletteTriggerBtn" title="Command Palette (Ctrl + K)">
+          <i data-lucide="command"></i>
+        </button>
+        <button class="hud-btn" id="voiceToggleBtn" title="Toggle Speech Output">
+          <i data-lucide="volume-2" id="voiceIconOn"></i>
+          <i data-lucide="volume-x" id="voiceIconOff" style="display: none;"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Master OS Layout Arena -->
+    <div class="os-layout home-mode" id="osLayout">
+      
+      <!-- Shared Central Mascot Arena -->
+      <div class="arena-view">
+        <!-- 1. Home Dashboard Mode Overlay -->
+        <div class="welcome-arena" id="welcomeArena">
+          <div class="mascot-stage" id="mascotStage">
+            <!-- Premium 3D Mascot from Stitch Folder -->
+            <div class="MascotContainer" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <img id="athenaMascot" class="mascot-image holographic-effect screen-blend" alt="Gayathri AI Mascot" src="shared/mascot.png?v=2">
+              <div id="mascotTypingIndicator" class="mascot-typing-indicator">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+          <div class="greeting-text" id="timeGreetingText">Good Day.</div>
+          <div class="intro-desc">I am Athena, your school's digital companion. I hold the archives of Gayathri School.</div>
+          <div class="home-prompt-bar" id="homePromptTrigger">
+            <i data-lucide="sparkles" style="color: var(--color-secondary);"></i>
+            <span class="prompt-bar-text">Search the School Database or Speak to Athena...</span>
+            <i data-lucide="arrow-right" style="color: var(--text-muted);"></i>
+          </div>
+        </div>
+
+        <!-- 2. Immersive Chat Companion Overlay -->
+        <div class="chat-arena" id="chatArena">
+          <div class="chat-panel">
+            <div class="conversation-thread" id="chatMessages">
+              <!-- Welcome greeting inside thread -->
+              <div class="speech-card-wrapper ai">
+                <div class="mascot-wrapper">
+                  <img class="mascot-image holographic-effect" alt="Gayathri AI Avatar" src="shared/mascot.png?v=2">
+                </div>
+                <div class="speech-card">
+                  <p>Welcome back. I am Athena. Ask me anything about school policies, admission, innovation lab launches, or timings.</p>
+                </div>
+              </div>
+              <div id="chatScrollAnchor" style="height: 1px; width: 100%;"></div>
+            </div>
+
+            <!-- Floating Input OS Panel -->
+            <div class="os-input-panel" style="position: relative;">
+              <textarea id="chatInput" placeholder="Write message or speak to Athena..." rows="1" maxlength="2000" aria-label="Prompt Input"></textarea>
+              <div id="charCounter" style="position: absolute; left: 1.25rem; bottom: -1rem; font-size: 0.7rem; color: var(--text-muted); opacity: 0; transition: opacity 0.2s ease; pointer-events: none;">0 / 2000</div>
+              <div class="os-input-actions">
+                <button class="hud-btn" id="attachBtn" title="Upload Document"><i data-lucide="paperclip"></i></button>
+                <button class="hud-btn" id="micBtn" title="Voice Recognition"><i data-lucide="mic"></i></button>
+                <button class="hud-btn" id="sendBtn" style="background: var(--color-secondary); color:#000; border:none;" title="Send"><i data-lucide="arrow-up"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic AI Workspace panel -->
+          <div class="companion-focus-panel" id="workspacePanel" style="flex: 1.2; display: flex; flex-direction: column; height: 100%; min-width: 380px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <h3 id="workspaceTitle" style="margin-bottom: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--text-core);">AI Workspace</h3>
+              <div id="workspaceControls" style="display: none; gap: 0.5rem;">
+                <button class="hud-btn" id="workspaceExportBtn" title="Export CSV" style="padding: 0.4rem 0.6rem; font-size: 0.75rem;"><i data-lucide="download" style="width: 14px; height: 14px;"></i></button>
+                <button class="hud-btn" id="workspaceExportExcelBtn" title="Export Excel" style="padding: 0.4rem 0.6rem; font-size: 0.75rem;"><i data-lucide="file-spreadsheet" style="width: 14px; height: 14px;"></i></button>
+                <button class="hud-btn" id="workspacePrintBtn" title="Print" style="padding: 0.4rem 0.6rem; font-size: 0.75rem;"><i data-lucide="printer" style="width: 14px; height: 14px;"></i></button>
+              </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="workspace-tabs" style="display: flex; gap: 0.25rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem; margin-bottom: 1rem; overflow-x: auto;">
+              <button class="tab-btn active" data-tab="table" style="background: none; border: none; color: var(--text-muted); font-size: 0.75rem; padding: 0.25rem 0.5rem; cursor: pointer; font-family: var(--font-display); font-weight: 600;">Table</button>
+              <button class="tab-btn" data-tab="profile" style="background: none; border: none; color: var(--text-muted); font-size: 0.75rem; padding: 0.25rem 0.5rem; cursor: pointer; font-family: var(--font-display); font-weight: 600;">Profile</button>
+              <button class="tab-btn" data-tab="analytics" style="background: none; border: none; color: var(--text-muted); font-size: 0.75rem; padding: 0.25rem 0.5rem; cursor: pointer; font-family: var(--font-display); font-weight: 600;">Analytics</button>
+              <button class="tab-btn" data-tab="document" style="background: none; border: none; color: var(--text-muted); font-size: 0.75rem; padding: 0.25rem 0.5rem; cursor: pointer; font-family: var(--font-display); font-weight: 600;">Document</button>
+              <button class="tab-btn" data-tab="downloads" style="background: none; border: none; color: var(--text-muted); font-size: 0.75rem; padding: 0.25rem 0.5rem; cursor: pointer; font-family: var(--font-display); font-weight: 600;">Downloads</button>
+            </div>
+
+            <div id="workspaceContent" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; width: 100%;">
+              <div style="text-align:center; padding:4rem 1rem; color:var(--text-muted); font-size:0.85rem;" class="empty-state">
+                <i data-lucide="sparkles" style="width:36px; height:36px; margin-bottom:1rem; opacity:0.5; display:block; margin-left:auto; margin-right:auto; color: var(--color-secondary);"></i>
+                <h4 style="color:#fff; margin:0 0 0.5rem 0;">AI Workspace</h4>
+                <p style="margin:0; font-size:0.75rem; color:var(--text-muted); line-height:1.4;">Ask a question to begin.<br><br>This area automatically displays tables, student profiles, statistics, documents, charts, downloads, and reports.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Floating Navigation Dock -->
+    <nav class="navigation-dock">
+      <div class="dock-container">
+        <button class="dock-item active" id="dockHomeBtn" title="Home Screen">
+          <i data-lucide="home"></i>
+        </button>
+        <button class="dock-item" id="dockChatBtn" title="Interactive Chat">
+          <i data-lucide="message-square"></i>
+        </button>
+        <button class="dock-item" id="dockDocsBtn" title="School Documents">
+          <i data-lucide="file-text"></i>
+        </button>
+        <button class="dock-item" id="dockSettingsBtn" title="Settings Panel">
+          <i data-lucide="settings"></i>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Overlay Panel: Settings -->
+  <div class="overlay-panel" id="settingsPanel">
+    <div class="overlay-header">
+      <h2 style="font-family: var(--font-display);">Preferences</h2>
+      <button class="overlay-close-btn" id="closeSettingsBtn"><i data-lucide="x"></i></button>
+    </div>
+    <div class="overlay-body">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+          <h3>Audio & Output</h3>
+          <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+            <span>Voice Speech Out</span>
+            <label class="custom-checkbox-wrapper">
+              <input type="checkbox" id="voiceToggleCheckbox" class="custom-checkbox-input">
+              <span class="custom-checkbox-box"></span>
+            </label>
+          </div>
+          <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+            <span>Sound Synth Chimes</span>
+            <label class="custom-checkbox-wrapper">
+              <input type="checkbox" id="soundToggleCheckbox" checked class="custom-checkbox-input">
+              <span class="custom-checkbox-box"></span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <h3>Style & Scaling</h3>
+          <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+            <span>High Contrast Interface</span>
+            <label class="custom-checkbox-wrapper">
+              <input type="checkbox" id="contrastToggleCheckbox" class="custom-checkbox-input">
+              <span class="custom-checkbox-box"></span>
+            </label>
+          </div>
+          <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+            <span>Scaling Level</span>
+            <select id="fontSizeSelector" class="custom-select">
+              <option value="15px">Normal</option>
+              <option value="17px">Large</option>
+              <option value="19px">Extra Large</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay Panel: Documents -->
+  <div class="overlay-panel" id="docsPanel">
+    <div class="overlay-header">
+      <h2 style="font-family: var(--font-display);">School Documents</h2>
+      <button class="overlay-close-btn" id="closeDocsBtn"><i data-lucide="x"></i></button>
+    </div>
+    <div class="overlay-body">
+      <div id="docsListContainer" style="display:flex; flex-direction:column; gap:1rem;">
+        <!-- Dynamic backend records populated here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette Search Overlay -->
+  <div class="command-palette" id="commandPalette">
+    <div class="command-box">
+      <div class="command-search">
+        <i data-lucide="search" style="color:var(--text-muted);"></i>
+        <input type="text" id="commandInput" placeholder="Type a search topic (e.g. admission, fee, lab)...">
+      </div>
+      <div class="command-list" id="commandList">
+        <div class="command-item" data-prompt="What is the admission procedure?">
+          <span>Admissions Schedule</span>
+          <i data-lucide="arrow-right-circle"></i>
+        </div>
+        <div class="command-item" data-prompt="What are school timings?">
+          <span>School Timings</span>
+          <i data-lucide="arrow-right-circle"></i>
+        </div>
+        <div class="command-item" data-prompt="What innovation projects are being built?">
+          <span>Innovation Hub Projects</span>
+          <i data-lucide="arrow-right-circle"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack Container -->
+  <div class="notification-container" id="toastContainer" style="position:fixed; bottom:2rem; right:2rem; z-index:999; display:flex; flex-direction:column; gap:0.5rem;" aria-live="polite"></div>
+
+  <!-- Master Script Files -->
+  <script src="shared/config.js"></script>
+  <script src="shared/shared.js"></script>
+  <script src="user.js"></script>
+</body>
+</html>

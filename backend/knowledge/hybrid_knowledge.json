@@ -1,0 +1,46 @@
+{
+  "Grade10_Attendance_Verification.txt": {
+    "metadata": {
+      "document_id": "Grade10_Attendance_Verification.txt",
+      "title": "Grade10 Attendance Verification",
+      "filename": "Grade10_Attendance_Verification.txt",
+      "document_type": "attendance",
+      "grade": null,
+      "section": null,
+      "academic_year": "2026",
+      "category": "Uncategorized",
+      "upload_date": "2026-07-04 19:01:43",
+      "aliases": [],
+      "keywords": [
+        "attendance",
+        "roll",
+        "student",
+        "name",
+        "singh",
+        "month",
+        "working",
+        "days",
+        "annual",
+        "summary",
+        "reyansh",
+        "zara",
+        "april",
+        "july",
+        "document"
+      ],
+      "hash": -3050227644497631016,
+      "pages": 1
+    },
+    "semantic_chunks": [
+      {
+        "chunk_id": "Grade10_Attendance_Verification.txt_semantic_0",
+        "text": "Annual Attendance Summary: Roll No: 10A-04 | Student Name: Reyansh Singh | Attendance: 100.0% Roll No: 10A-20 | Student Name: Zara Singh | Attendance: 100.0% Month: April | Working Days: 22 Month: July | Working Days: 24 Document Title: Gayathri Attendance Ledger 2026",
+        "page_number": 1,
+        "source_filename": "Grade10_Attendance_Verification.txt"
+      }
+    ],
+    "structured_records": [],
+    "entity_index": {},
+    "keyword_index": {}
+  }
+}

@@ -1,0 +1,31 @@
+==================================================
+GSIP STARTUP DIAGNOSTIC REPORT
+==================================================
+Timestamp: 2026-07-04 17:18:29
+OS: Windows 11 (10.0.26200)
+Python Version: 3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]
+Node.js Version: v24.16.0
+npm Version: 11.13.0
+
+--- Environment Variables ---
+USER_PORT=3100
+ADMIN_PORT=3101
+BACKEND_PORT=8100
+OLLAMA_URL=http://localhost:11434
+MODEL_NAME=llama3.2:latest
+
+Error Details: Backend process crashed during startup.
+
+--- Last 50 Lines of Backend Log ---
+C:\Users\karth\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\__init__.py:113: RequestsDependencyWarning: urllib3 (2.7.0) or chardet (7.4.3)/charset_normalizer (3.4.7) doesn't match a supported version!
+  warnings.warn(
+INFO:     Started server process [27980]
+INFO:     Waiting for application startup.
+2026-07-04 17:18:28,965 - health_manager - INFO - Initializing background integrity self-healing scanner...
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8100): [winerror 10048] only one usage of each socket address (protocol/network address/port) is normally permitted
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+
+
+==================================================

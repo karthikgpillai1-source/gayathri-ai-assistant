@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gayathri AI - Chat Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .message-entrance {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 242, 255, 0.4)) drop-shadow(0 0 2px rgba(0, 242, 255, 0.2)); opacity: 0.9; }
+            50% { filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.7)) drop-shadow(0 0 5px rgba(0, 242, 255, 0.4)); opacity: 1; }
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .inner-light-border {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .mascot-blend {
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 4px 6px rgba(0, 73, 219, 0.2));
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#f7f5ff",
+                      "tertiary-container": "#6069c3",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#343d96",
+                      "surface-container-low": "#f2f4f6",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "surface-container-high": "#e6e8ea",
+                      "on-secondary-container": "#006573",
+                      "secondary": "#006876",
+                      "surface-dim": "#d8dadc",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#191c1e",
+                      "surface-bright": "#f7f9fb",
+                      "tertiary-fixed": "#e0e0ff",
+                      "on-primary-fixed-variant": "#003ab3",
+                      "outline-variant": "#c3c5d8",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#b6c4ff",
+                      "tertiary-fixed-dim": "#bdc2ff",
+                      "surface": "#f7f9fb",
+                      "outline": "#737687",
+                      "surface-variant": "#e0e3e5",
+                      "error-container": "#ffdad6",
+                      "background": "#f7f9fb",
+                      "surface-container": "#eceef0",
+                      "tertiary": "#4650a9",
+                      "primary-fixed": "#dce1ff",
+                      "on-primary-fixed": "#001550",
+                      "on-tertiary-fixed": "#000767",
+                      "on-secondary-fixed": "#001f25",
+                      "on-background": "#191c1e",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed-variant": "#004e59",
+                      "secondary-container": "#58e6ff",
+                      "surface-container-highest": "#e0e3e5",
+                      "inverse-on-surface": "#eff1f3",
+                      "primary": "#0049db",
+                      "secondary-fixed": "#a1efff",
+                      "surface-tint": "#004ee8",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#2d3133",
+                      "on-tertiary-container": "#f8f5ff",
+                      "on-surface-variant": "#434656",
+                      "primary-fixed-dim": "#b6c4ff",
+                      "primary-container": "#2962ff",
+                      "secondary-fixed-dim": "#44d8f1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-margin": "40px",
+                      "base": "8px",
+                      "max-width-desktop": "1200px",
+                      "message-gap": "16px",
+                      "container-padding": "24px",
+                      "max-width-chat": "800px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "mono-code": ["Geist"],
+                      "label-sm": ["Geist"],
+                      "body-md": ["Inter"],
+                      "display-lg-mobile": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "display-lg": ["Geist"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "mono-code": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background font-body-md text-on-background overflow-hidden h-screen flex flex-col">
+<!-- Global Background Shader -->
+
+<!-- Header Navigation -->
+<header class="fixed top-0 w-full z-50 glass-effect bg-surface/60 border-b border-white/20 shadow-sm shadow-primary/5 h-16 flex items-center justify-between px-container-padding">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-primary/10 rounded-full transition-colors">menu</button>
+<div class="flex items-center gap-1">
+<img alt="Gayathri AI Mascot" class="w-10 h-10 mascot-blend scale-125 origin-center" src="https://lh3.googleusercontent.com/aida/AP1WRLuBtPR2MIvd2-6ZWAZLO-SOIDOFuTYpClr9-iIUmCH-G3W-ooZgOKJQaWMaGZxgSX-0sYYVi9tKh8DXDHZn7EEjrVhBidOOmfHVPqxSUlqiuGA6Lwa2Hn9WFkEAv9uKmLrdDIUmWZ4eyDhdObd7_yoVPy4AF1h5_lMl0VFvQBPzX-ZjB5GKJsSeQb-O9vacZcT1WCAQYuyUG7BLJ6Y8m098hX5gTpgUwbQ7OITLjaD-gckDnP_F4En60HeN"/>
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">Gayathri AI</h1>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border-2 border-white flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional student profile picture in a high-key studio lighting setup." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABZwdwxHbVB_ueqEXFbRNhXmpYvQLpYVGhNBhSG65TAnssQIvYkGlwtN9vWYuBID8mwQ8JcXtkbucPwRkgRs6j_peVKFTggSyOpZcYHo2tgjllddcagkQvcdU97zRGIYN4rBEl7ApywwvQPYExpfvjYfbq_XwZaJ7Oev_na2FcAFA2pOiMYiv4EkgvHuwKe6_C6pGy75DnhDkxasckLVpJxD6ak_wamtoowgBx7PgH1E1MUKex9U92OA"/>
+</div>
+</div>
+</header>
+<!-- Main Chat Canvas -->
+<main class="flex-1 overflow-y-auto pt-20 pb-40 chat-container relative z-10 px-4 md:px-0">
+<div class="max-w-[800px] mx-auto flex flex-col gap-6 w-full">
+<!-- AI Welcome Message -->
+<div class="flex flex-col gap-2 max-w-[85%] self-start message-entrance">
+<div class="bg-surface/80 glass-effect border border-white/40 inner-light-border p-4 rounded-2xl rounded-tl-none shadow-sm text-on-surface">
+<p class="font-body-md">Hello! I'm your Gayathri AI assistant. How can I help you with your school queries today?</p>
+</div>
+<div class="flex gap-2 items-center px-1">
+<button class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span> Copy
+                    </button>
+<button class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">volume_up</span> Speak
+                    </button>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex flex-col gap-2 max-w-[85%] self-end message-entrance" style="animation-delay: 0.2s;">
+<div class="bg-primary text-on-primary p-4 rounded-2xl rounded-tr-none shadow-md">
+<p class="font-body-md">What are the upcoming exams for Grade 11?</p>
+</div>
+<div class="text-right px-1">
+<span class="text-label-sm font-label-sm text-on-surface-variant/60">Sent • 10:24 AM</span>
+</div>
+</div>
+<!-- AI Response with Gradient -->
+<div class="flex flex-col gap-2 max-w-[85%] self-start message-entrance" style="animation-delay: 0.4s;">
+<div class="bg-gradient-to-br from-surface/90 to-primary-fixed-dim/20 glass-effect border border-white/40 inner-light-border p-4 rounded-2xl rounded-tl-none shadow-sm text-on-surface">
+<p class="font-body-md mb-3">According to the latest academic calendar, Grade 11 has the following schedule:</p>
+<div class="bg-white/40 p-3 rounded-xl border border-white/20 mb-3 space-y-2">
+<div class="flex justify-between items-center">
+<span class="font-bold text-primary">Mathematics</span>
+<span class="text-label-sm bg-primary/10 px-2 py-0.5 rounded-full">Oct 15</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-bold text-primary">Physics</span>
+<span class="text-label-sm bg-primary/10 px-2 py-0.5 rounded-full">Oct 18</span>
+</div>
+</div>
+<p class="font-body-md">Would you like me to set a reminder for these dates?</p>
+</div>
+<div class="flex gap-2 items-center px-1">
+<button class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">refresh</span> Regenerate
+                    </button>
+<button class="flex items-center gap-1 text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span> Copy
+                    </button>
+</div>
+</div>
+<!-- Thinking State -->
+<div class="flex items-center gap-2 self-start px-2 message-entrance" style="animation-delay: 0.6s;">
+<div class="relative w-12 h-12 flex items-center justify-center">
+<img alt="AI Thinking Mascot" class="w-10 h-10 mascot-blend pulse-glow" src="https://lh3.googleusercontent.com/aida/AP1WRLuBtPR2MIvd2-6ZWAZLO-SOIDOFuTYpClr9-iIUmCH-G3W-ooZgOKJQaWMaGZxgSX-0sYYVi9tKh8DXDHZn7EEjrVhBidOOmfHVPqxSUlqiuGA6Lwa2Hn9WFkEAv9uKmLrdDIUmWZ4eyDhdObd7_yoVPy4AF1h5_lMl0VFvQBPzX-ZjB5GKJsSeQb-O9vacZcT1WCAQYuyUG7BLJ6Y8m098hX5gTpgUwbQ7OITLjaD-gckDnP_F4En60HeN"/>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-primary font-bold">Reading policies...</span>
+<div class="flex gap-1 mt-1">
+<div class="w-1 h-1 bg-primary/40 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+<div class="w-1 h-1 bg-primary/40 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+<div class="w-1 h-1 bg-primary/40 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Controls Area -->
+<footer class="fixed bottom-0 w-full z-50 bg-gradient-to-t from-background via-background/90 to-transparent pb-8">
+<div class="max-w-[800px] mx-auto px-4 flex flex-col gap-4">
+<!-- Suggested Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+<button class="flex-shrink-0 px-4 py-2 bg-surface/60 glass-effect border border-primary/20 rounded-full text-label-sm font-label-sm text-primary hover:bg-primary hover:text-on-primary transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm">
+                    Admission Process
+                </button>
+<button class="flex-shrink-0 px-4 py-2 bg-surface/60 glass-effect border border-primary/20 rounded-full text-label-sm font-label-sm text-primary hover:bg-primary hover:text-on-primary transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm">
+                    School Fees
+                </button>
+<button class="flex-shrink-0 px-4 py-2 bg-surface/60 glass-effect border border-primary/20 rounded-full text-label-sm font-label-sm text-primary hover:bg-primary hover:text-on-primary transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm">
+                    Exam Schedule
+                </button>
+</div>
+<!-- Floating Input Bar -->
+<div class="glass-effect bg-white/70 border border-white p-2 rounded-full shadow-xl shadow-primary/10 flex items-center gap-2 inner-light-border group focus-within:shadow-primary/20 transition-all duration-300">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container rounded-full transition-colors" title="Attach file">attach_file</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-body-md placeholder:text-on-surface-variant/50" placeholder="Ask anything about school..." type="text"/>
+<div class="flex items-center gap-1">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container rounded-full transition-colors" title="Voice input">mic</button>
+<button class="bg-primary text-on-primary p-2.5 rounded-full flex items-center justify-center transform active:scale-90 transition-transform shadow-lg shadow-primary/20" title="Send message">
+<span class="material-symbols-outlined !text-[20px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</footer>
+<!-- Bottom Navigation Component -->
+<nav class="md:hidden fixed bottom-0 w-full z-[60] bg-surface/60 glass-effect border-t border-white/20 h-20 flex justify-around items-center px-4 pb-safe shadow-[0_-4px_20px_rgba(0,73,219,0.1)]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-2xl px-4 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-sm text-label-sm">New Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-sm text-label-sm">History</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</nav>
+<script>
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.95)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+        const chatContainer = document.querySelector('main');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    </script>
+</body></html>

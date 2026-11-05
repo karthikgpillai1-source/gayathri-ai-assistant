@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="shared/shared.css">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Dynamic WebGL Background -->
+  <div class="background-canvas">
+    <canvas id="shaderCanvas"></canvas>
+  </div>
+
+  <!-- Secure Authentication Login Screen -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="brand-logo" style="margin-bottom:0.5rem; letter-spacing: 0.1em; font-family: var(--font-display); font-size: 1.5rem; font-weight:800; color:var(--color-secondary);">GAYATHRI AI</div>
+      <h2 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 1.5rem;">Admin Authorization</h2>
+      <div style="width:100%; text-align:left; margin-bottom:1rem;">
+        <label style="font-size:0.85rem; color:var(--text-dim);">Admin User</label>
+        <input type="text" id="loginUser" placeholder="admin" style="width:100%; padding:0.75rem; background:rgba(0,0,0,0.4); border:1px solid var(--border-glass); border-radius:8px; color:#fff; margin-top:0.25rem;">
+      </div>
+      <div style="width:100%; text-align:left; margin-bottom:1.5rem;">
+        <label style="font-size:0.85rem; color:var(--text-dim);">Security Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••" style="width:100%; padding:0.75rem; background:rgba(0,0,0,0.4); border:1px solid var(--border-glass); border-radius:8px; color:#fff; margin-top:0.25rem;">
+      </div>
+      <button class="quick-action-card" id="loginBtn" style="width:100%; padding:0.75rem; display:flex; justify-content:center; align-items:center; border:none; cursor:pointer; font-weight:600; color:var(--color-secondary);">
+        <i data-lucide="lock" style="margin-right:0.5rem;"></i> Authorize Session
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Administrative Workspace Layout -->
+  <div class="admin-layout" id="adminLayout" style="display: none;">
+    
+    <!-- Top HUD Header -->
+    <header class="hud-header">
+      <div class="hud-brand">
+        <i data-lucide="shield-check" style="color: var(--color-secondary);"></i>
+        <div class="brand-logo" style="margin-left:0.5rem; font-family: var(--font-display); font-size:1.1rem; font-weight:800;">ADMIN CONSOLE</div>
+      </div>
+      <div class="hud-actions">
+        <a href="http://localhost:3100/" id="backToUserPortalBtn" class="hud-btn" title="Back to Chat Dashboard">
+          <i data-lucide="message-square"></i>
+        </a>
+        <button class="hud-btn" id="logoutBtn" title="Log Out Session">
+          <i data-lucide="log-out"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Console Main Workspace -->
+    <div class="admin-main-container">
+      
+      <!-- Left Sidebar Navigation Options -->
+      <aside class="admin-sidebar">
+        <button class="sidebar-item active" data-tab="dashboard">
+          <i data-lucide="activity"></i> <span>Dashboard</span>
+        </button>
+        <button class="sidebar-item" data-tab="knowledge">
+          <i data-lucide="database"></i> <span>Knowledge Base</span>
+        </button>
+        <button class="sidebar-item" data-tab="config">
+          <i data-lucide="sliders"></i> <span>AI Config</span>
+        </button>
+        <button class="sidebar-item" data-tab="users">
+          <i data-lucide="users"></i> <span>User Access</span>
+        </button>
+        <button class="sidebar-item" data-tab="logs">
+          <i data-lucide="terminal"></i> <span>Query Logs</span>
+        </button>
+        <button class="sidebar-item" data-tab="settings">
+          <i data-lucide="settings"></i> <span>Settings</span>
+        </button>
+        <button class="sidebar-item" data-tab="health">
+          <i data-lucide="shield-check"></i> <span>System Health</span>
+        </button>
+      </aside>
+
+      <!-- Central Content Workspace panels -->
+      <main class="admin-workspace">
+        
+        <!-- MODULE 1: Dashboard overview -->
+        <section class="admin-panel active" id="panel-dashboard">
+          <h2 class="panel-title">System Telemetry Overview</h2>
+          
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <i data-lucide="files" class="tel-icon"></i>
+              <div class="tel-value" id="metrics-docs">0</div>
+              <div class="tel-label">Total Documents</div>
+            </div>
+            <div class="telemetry-card">
+              <i data-lucide="message-circle" class="tel-icon"></i>
+              <div class="tel-value" id="metrics-queries">0</div>
+              <div class="tel-label">AI Queries Today</div>
+            </div>
+            <div class="telemetry-card">
+              <i data-lucide="tag" class="tel-icon"></i>
+              <div class="tel-value" id="metrics-categories">0</div>
+              <div class="tel-label">Total Categories</div>
+            </div>
+            <div class="telemetry-card">
+              <i data-lucide="hard-drive" class="tel-icon"></i>
+              <div class="tel-value" id="metrics-storage">0 Bytes</div>
+              <div class="tel-label">Storage Usage</div>
+            </div>
+          </div>
+
+          <!-- Services health monitor stack -->
+          <div style="margin-top:2rem;">
+            <h3 style="font-family: var(--font-display); font-weight:600; margin-bottom:1rem;">Core Engine Health Status</h3>
+            <div class="health-grid">
+              <div class="health-card green" id="card-ollama">
+                <span class="health-indicator"></span>
+                <div class="health-details">
+                  <div class="health-name">Ollama Engine</div>
+                  <div class="health-status" id="health-ollama">ONLINE</div>
+                </div>
+              </div>
+              <div class="health-card green" id="card-model">
+                <span class="health-indicator"></span>
+                <div class="health-details">
+                  <div class="health-name">Local LLM loaded</div>
+                  <div class="health-status" id="health-model">llama3.2:latest</div>
+                </div>
+              </div>
+              <div class="health-card green" id="card-vectordb">
+                <span class="health-indicator"></span>
+                <div class="health-details">
+                  <div class="health-name">Vector DB</div>
+                  <div class="health-status" id="health-vectordb">CONNECTED</div>
+                </div>
+              </div>
+              <div class="health-card" id="card-embedding">
+                <span class="health-indicator pulse"></span>
+                <div class="health-details">
+                  <div class="health-name">Embedding Worker</div>
+                  <div class="health-status" id="health-embedding">IDLE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resource Analytics widgets -->
+          <div class="analytics-row" style="margin-top:2rem; display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+            <div class="analytics-card" style="padding:1.5rem;">
+              <h4>Average Response Latency</h4>
+              <div style="padding:1.5rem; color:var(--text-muted); height:150px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                <div style="font-size:2.5rem; font-weight:700; color:var(--color-primary);" id="latency-avg">0.0s</div>
+                <div style="font-size:0.85rem; color:var(--text-dim); margin-top:0.25rem;">Average Response Latency</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem;" id="latency-info">Derived from last 100 queries</div>
+              </div>
+            </div>
+            
+            <div class="analytics-card" style="padding:1.5rem;">
+              <h4>System CPU & Memory Allocation</h4>
+              <div style="padding:1rem; height:150px; display:flex; flex-direction:column; justify-content:center; gap:0.75rem;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.25rem;">
+                    <span>CPU Usage</span><span id="sys-cpu">0%</span>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden;">
+                    <div id="sys-cpu-bar" style="background:var(--color-primary); width:0%; height:100%; transition:width 0.3s;"></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.25rem;">
+                    <span>Memory Allocation</span><span id="sys-mem">0%</span>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden;">
+                    <div id="sys-mem-bar" style="background:var(--color-secondary); width:0%; height:100%; transition:width 0.3s;"></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.25rem;">
+                    <span>Disk Space</span><span id="sys-disk">0%</span>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden;">
+                    <div id="sys-disk-bar" style="background:var(--color-secondary); width:0%; height:100%; transition:width 0.3s;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hybrid Knowledge Engine Production Metrics & Actions Panel -->
+          <div style="margin-top:2rem; display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
+            <div class="analytics-card" style="padding:1.5rem;">
+              <h4>Hybrid Knowledge Engine Telemetry Metrics</h4>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:1rem;" id="hybrid-metrics-grid">
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Structured Records</span><strong id="met-struct-records">0</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Total Entities</span><strong id="met-entities">0</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Total Embeddings</span><strong id="met-embeddings">0</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Total Vector Chunks</span><strong id="met-chunks">0</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Retrieval Success Rate</span><strong id="met-success-rate">100%</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Failed Retrievals</span><strong id="met-failed-ret">0</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Background Jobs</span><strong id="met-bg-jobs">0</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Queue Size</span><strong id="met-queue">0</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Active Users</span><strong id="met-users">1</strong>
+                </div>
+                <div class="metric-row" style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:0.4rem;">
+                  <span>Last Sync</span><strong id="met-sync">None</strong>
+                </div>
+              </div>
+            </div>
+            
+            <div class="analytics-card" style="padding:1.5rem;">
+              <h4>Intelligent Quick Actions</h4>
+              <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;" id="quick-actions-panel">
+                <button class="action-btn-sm" style="width:100%; text-align:left; justify-content:flex-start;" onclick="alert('View latest uploaded document is ready!')">
+                  <i data-lucide="eye" style="width:16px; height:16px; margin-right:0.5rem;"></i> View Latest Document
+                </button>
+                <button class="action-btn-sm" style="width:100%; text-align:left; justify-content:flex-start;" onclick="alert('Attendance database list is synced!')">
+                  <i data-lucide="database" style="width:16px; height:16px; margin-right:0.5rem;"></i> List Attendance Datasets
+                </button>
+                <button class="action-btn-sm" style="width:100%; text-align:left; justify-content:flex-start;" onclick="alert('Recent circulars retrieved!')">
+                  <i data-lucide="bell" style="width:16px; height:16px; margin-right:0.5rem;"></i> Show Recent Circulars
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Observability Diagnostics Panel -->
+          <div class="analytics-card" style="padding:1.5rem; margin-top:2rem;">
+            <h4>Active RAG Diagnostics & Observability Panel</h4>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin-top:1rem;" id="observability-panel">
+              <div style="background:rgba(255,255,255,0.02); padding:1rem; border-radius:8px;">
+                <h5>Pipeline State</h5>
+                <p style="margin: 0.5rem 0;">Intent: <strong id="obs-intent" style="color:var(--color-primary);">RECORD_LOOKUP</strong></p>
+                <p style="margin: 0.5rem 0;">Execution Engine: <strong id="obs-engine" style="color:var(--color-secondary);">Record Index Engine</strong></p>
+                <p style="margin: 0.5rem 0;">Confidence Score: <strong id="obs-confidence">1.00</strong></p>
+                <p style="margin: 0.5rem 0;">Cache Hits: <strong id="obs-cache-hits">1</strong></p>
+                <p style="margin: 0.5rem 0;">Execution Time: <strong id="obs-time">4.2 ms</strong></p>
+              </div>
+              <div style="background:rgba(255,255,255,0.02); padding:1rem; border-radius:8px;">
+                <h5>Retrieved Context Evidence</h5>
+                <div style="font-size:0.85rem; max-height:100px; overflow-y:auto; color:var(--text-dim);" id="obs-evidence">
+                  Student Record: Roll No: 10A-16, Student Name: Reyansh Joshi, Gender: M, Attendance: 236, Absent: 11, Percentage: 95.5%
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 2: Knowledge base manager -->
+        <section class="admin-panel" id="panel-knowledge">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+            <h2 class="panel-title">School Knowledge Archive</h2>
+            <button class="action-btn" id="uploadDocBtn">
+              <i data-lucide="upload-cloud"></i> Upload Document
+            </button>
+          </div>
+          
+          <div class="table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Category</th>
+                  <th>Upload Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="documents-table-body">
+                <tr>
+                  <td colspan="5" style="text-align:center; padding:3rem; color:var(--text-muted);">
+                    <i data-lucide="folder-open" style="width:48px; height:48px; margin-bottom:1rem; opacity:0.5; color:var(--text-muted); display:block; margin-left:auto; margin-right:auto;"></i>
+                    No documents have been uploaded yet.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Category definitions manager -->
+          <div style="margin-top:2.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+              <h3 style="font-family: var(--font-display); font-weight:600;">System Knowledge Categories</h3>
+              <button class="action-btn-sm" id="addCategoryBtn"><i data-lucide="plus"></i> Add Category</button>
+            </div>
+            <div class="badge-grid" id="categories-grid" style="display:flex; justify-content:center; align-items:center; width:100%; min-height:80px;">
+              <div style="text-align:center; padding:1rem; color:var(--text-muted);">
+                <i data-lucide="tag" style="width:32px; height:32px; margin-bottom:0.5rem; opacity:0.5; display:block; margin-left:auto; margin-right:auto;"></i>
+                No categories created.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 3: AI Configuration parameters -->
+        <section class="admin-panel" id="panel-config">
+          <h2 class="panel-title">System Settings & Configuration</h2>
+
+          <div class="config-tabs-nav" style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:1px solid var(--border-glass); padding-bottom:0.75rem; overflow-x:auto;">
+            <button class="config-tab-btn active" data-tab="tab-general" style="background:none; border:none; color:var(--color-secondary); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">General</button>
+            <button class="config-tab-btn" data-tab="tab-ai" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">AI Engine</button>
+            <button class="config-tab-btn" data-tab="tab-kb" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">Knowledge Base</button>
+            <button class="config-tab-btn" data-tab="tab-security" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">Security</button>
+            <button class="config-tab-btn" data-tab="tab-branding" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">Branding</button>
+            <button class="config-tab-btn" data-tab="tab-backup" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">Backup & Restore</button>
+            <button class="config-tab-btn" data-tab="tab-versions" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">Versions</button>
+            <button class="config-tab-btn" data-tab="tab-audit" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:600; padding:0.5rem 1rem; border-radius:6px; transition:0.2s;">Audit Logs</button>
+          </div>
+
+          <!-- Tab 1: General -->
+          <div class="config-tab-content active" id="tab-general">
+            <div class="config-grid">
+              <div class="config-section">
+                <h3>Institution Identity</h3>
+                <div class="input-group">
+                  <label>Institution Name</label>
+                  <input type="text" id="cfg-institution_name">
+                </div>
+                <div class="input-group">
+                  <label>AI Companion Name</label>
+                  <input type="text" id="cfg-ai_companion_name">
+                </div>
+              </div>
+              <div class="config-section">
+                <h3>Administrative Contact</h3>
+                <div class="input-group">
+                  <label>Contact Email</label>
+                  <input type="email" id="cfg-contact_email">
+                </div>
+                <div class="input-group">
+                  <label>Contact Phone</label>
+                  <input type="text" id="cfg-contact_phone">
+                </div>
+                <div class="input-group">
+                  <label>Office Address</label>
+                  <input type="text" id="cfg-office_address">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: AI Engine -->
+          <div class="config-tab-content" id="tab-ai" style="display:none;">
+            <div class="config-grid">
+              <div class="config-section">
+                <h3>Model Settings</h3>
+                <div class="input-group">
+                  <label>Current Model <span class="badge" style="background:rgba(239,68,68,0.2); color:#f87171; font-size:0.7rem; padding:0.1rem 0.3rem; border-radius:4px;">Restart Required</span></label>
+                  <input type="text" id="cfg-current_model">
+                </div>
+                <div class="input-group">
+                  <label>Sampling Temperature (0.0 - 1.0)</label>
+                  <div style="display:flex; align-items:center; gap:1rem;">
+                    <input type="range" id="cfg-temperature" min="0" max="1" step="0.1" style="flex-grow:1;">
+                    <span id="tempValNew">0.7</span>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label>Maximum Context Size <span class="badge" style="background:rgba(239,68,68,0.2); color:#f87171; font-size:0.7rem; padding:0.1rem 0.3rem; border-radius:4px;">Restart Required</span></label>
+                  <input type="number" id="cfg-max_context">
+                </div>
+              </div>
+              <div class="config-section">
+                <h3>Inference Configuration</h3>
+                <div class="input-group">
+                  <label>Maximum Token Limit <span class="badge" style="background:rgba(239,68,68,0.2); color:#f87171; font-size:0.7rem; padding:0.1rem 0.3rem; border-radius:4px;">Restart Required</span></label>
+                  <input type="number" id="cfg-max_tokens">
+                </div>
+                <div class="input-group">
+                  <label>Response Timeout (seconds)</label>
+                  <input type="number" id="cfg-response_timeout">
+                </div>
+                <div class="input-group-row">
+                  <span>Enable Streaming</span>
+                  <label class="custom-checkbox-wrapper">
+                    <input type="checkbox" id="cfg-streaming" class="custom-checkbox-input">
+                    <span class="custom-checkbox-box"></span>
+                  </label>
+                </div>
+                <div class="input-group-row" style="margin-top:1rem;">
+                  <span>Allow General Knowledge</span>
+                  <label class="custom-checkbox-wrapper">
+                    <input type="checkbox" id="cfg-allow_general_knowledge" class="custom-checkbox-input">
+                    <span class="custom-checkbox-box"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Knowledge Base -->
+          <div class="config-tab-content" id="tab-kb" style="display:none;">
+            <div class="config-grid">
+              <div class="config-section">
+                <h3>Ingestion Settings</h3>
+                <div class="input-group">
+                  <label>Supported File Types (comma separated)</label>
+                  <input type="text" id="cfg-supported_file_types">
+                </div>
+                <div class="input-group">
+                  <label>Maximum Upload Size (MB)</label>
+                  <input type="number" id="cfg-max_upload_size_mb">
+                </div>
+                <div class="input-group">
+                  <label>Embedding Model <span class="badge" style="background:rgba(239,68,68,0.2); color:#f87171; font-size:0.7rem; padding:0.1rem 0.3rem; border-radius:4px;">Restart Required</span></label>
+                  <input type="text" id="cfg-embedding_model">
+                </div>
+              </div>
+              <div class="config-section">
+                <h3>Indexing Rules</h3>
+                <div class="input-group">
+                  <label>Chunk Size</label>
+                  <input type="number" id="cfg-chunk_size">
+                </div>
+                <div class="input-group">
+                  <label>Chunk Overlap</label>
+                  <input type="number" id="cfg-chunk_overlap">
+                </div>
+                <div class="input-group-row">
+                  <span>Auto Re-index on Ingest</span>
+                  <label class="custom-checkbox-wrapper">
+                    <input type="checkbox" id="cfg-auto_reindex" class="custom-checkbox-input">
+                    <span class="custom-checkbox-box"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Security -->
+          <div class="config-tab-content" id="tab-security" style="display:none;">
+            <div class="config-grid">
+              <div class="config-section">
+                <h3>Session & Expirations</h3>
+                <div class="input-group">
+                  <label>Session Timeout (minutes)</label>
+                  <input type="number" id="cfg-session_timeout_minutes">
+                </div>
+                <div class="input-group">
+                  <label>JWT Token Expiration (hours)</label>
+                  <input type="number" id="cfg-jwt_expiration_hours">
+                </div>
+              </div>
+              <div class="config-section">
+                <h3>Password & Lockout</h3>
+                <div class="input-group">
+                  <label>Password Strength Policy</label>
+                  <input type="text" id="cfg-password_policy">
+                </div>
+                <div class="input-group">
+                  <label>Max Login Attempts</label>
+                  <input type="number" id="cfg-admin_login_attempts">
+                </div>
+                <div class="input-group">
+                  <label>Account Lockout Duration (seconds)</label>
+                  <input type="number" id="cfg-account_lock_duration_seconds">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 5: Branding -->
+          <div class="config-tab-content" id="tab-branding" style="display:none;">
+            <div class="config-grid">
+              <div class="config-section">
+                <h3>Branding Identity</h3>
+                <div class="input-group">
+                  <label>School Logo Path</label>
+                  <input type="text" id="cfg-school_logo">
+                </div>
+                <div class="input-group">
+                  <label>AI Mascot Asset Path</label>
+                  <input type="text" id="cfg-ai_mascot">
+                </div>
+                <div class="input-group">
+                  <label>Accent Hex Color</label>
+                  <input type="text" id="cfg-accent_color">
+                </div>
+              </div>
+              <div class="config-section">
+                <h3>Details</h3>
+                <div class="input-group">
+                  <label>School Motto</label>
+                  <input type="text" id="cfg-school_motto">
+                </div>
+                <div class="input-group">
+                  <label>Favicon Path</label>
+                  <input type="text" id="cfg-favicon">
+                </div>
+              </div>
+              <div class="config-section" style="grid-column: 1 / -1;">
+                <h3>Welcome Experience</h3>
+                <div class="input-group">
+                  <label>Welcome Greeting</label>
+                  <textarea id="cfg-welcome_message" rows="4" maxlength="1000" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass); border-radius:6px; color:var(--text-core); padding:0.5rem; resize:vertical; font-family:inherit;"></textarea>
+                </div>
+                <div style="margin-top:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+                  <button type="button" class="action-btn" id="btnResetWelcome" style="background:transparent; border:1px solid var(--border-glass); color:var(--text-core); font-size:0.85rem; padding:0.4rem 0.8rem; border-radius:4px; cursor:pointer;">Reset to Default</button>
+                  <span id="charCountWelcome" style="font-size:0.85rem; color:var(--text-dim);">0 / 1000</span>
+                </div>
+                <div style="margin-top:1.25rem; padding:1rem; background:rgba(0,0,0,0.2); border-left:3px solid var(--color-primary); border-radius:4px;">
+                  <h4 style="margin:0 0 0.5rem 0; font-size:0.9rem; color:var(--color-primary);">Greeting Live Preview</h4>
+                  <div id="welcomePreview" style="font-size:0.9rem; line-height:1.5; white-space:pre-wrap; color:var(--text-core);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 6: Backup & Recovery -->
+          <div class="config-tab-content" id="tab-backup" style="display:none;">
+            <div class="config-grid">
+              <div class="config-section">
+                <h3>System Backup</h3>
+                <p style="font-size:0.85rem; color:var(--text-dim); margin-bottom:1rem;">Generate an encrypted, compressed snapshot of all system configurations, user catalog lists, knowledge files, and logs.</p>
+                <button class="action-btn" id="btnDownloadBackup" style="background:var(--color-primary); color:white;">
+                  <i data-lucide="download"></i> Download Encrypted Backup (.gsip)
+                </button>
+              </div>
+              <div class="config-section">
+                <h3>Restore System</h3>
+                <p style="font-size:0.85rem; color:var(--text-dim); margin-bottom:1rem;">Upload a valid, encrypted `.gsip` backup archive to overwrite system files and configurations.</p>
+                <input type="file" id="restoreFileSelector" style="display:none;" accept=".gsip">
+                <button class="action-btn" id="btnRestoreBackup" style="background:var(--color-secondary); color:white;">
+                  <i data-lucide="upload"></i> Upload & Restore Backup
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 7: Version History -->
+          <div class="config-tab-content" id="tab-versions" style="display:none;">
+            <div class="table-container" style="max-height: 250px; overflow-y: auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Ver</th>
+                    <th>Saved By</th>
+                    <th>Saved At</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="configVersionList">
+                  <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No saved versions found.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 8: Audit Logs -->
+          <div class="config-tab-content" id="tab-audit" style="display:none;">
+            <div class="table-container" style="max-height: 250px; overflow-y: auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Admin</th>
+                    <th>Module</th>
+                    <th>Setting</th>
+                    <th>Old</th>
+                    <th>New</th>
+                  </tr>
+                </thead>
+                <tbody id="configAuditLogList">
+                  <tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No audit logs captured yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <button class="action-btn" id="saveConfigBtn" style="margin-top:2rem; width:100%; justify-content:center;">
+            <i data-lucide="save"></i> Save System Configuration
+          </button>
+        </section>
+
+        <!-- MODULE 4: Users and Permissions Access -->
+        <section class="admin-panel" id="panel-users">
+          <h2 class="panel-title">Access & Identity Management</h2>
+          
+          <div class="table-container" style="margin-bottom:2.5rem;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>User Username</th>
+                  <th>Assigned Role</th>
+                  <th>Activity Log</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <tr>
+                  <td colspan="5" style="text-align:center; padding:3rem; color:var(--text-muted);">
+                    <i data-lucide="users" style="width:48px; height:48px; margin-bottom:1rem; opacity:0.5; display:block; margin-left:auto; margin-right:auto;"></i>
+                    No users available.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Permissions access grid matrix -->
+          <div>
+            <h3 style="font-family: var(--font-display); font-weight:600; margin-bottom:1rem;">Visual Access Permission Matrix</h3>
+            <div class="table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Role Group</th>
+                    <th>Document View</th>
+                    <th>Knowledge Upload</th>
+                    <th>Analytics View</th>
+                    <th>Settings Write</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Administrator</td>
+                    <td><input type="checkbox" checked disabled></td>
+                    <td><input type="checkbox" checked disabled></td>
+                    <td><input type="checkbox" checked disabled></td>
+                    <td><input type="checkbox" checked disabled></td>
+                  </tr>
+                  <tr>
+                    <td>Principal</td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox"></td>
+                  </tr>
+                  <tr>
+                    <td>Teacher</td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 5: Query logs -->
+        <section class="admin-panel" id="panel-logs">
+          <h2 class="panel-title">Conversation Review Logs</h2>
+          
+          <div style="display:flex; gap:1rem; margin-bottom:1.5rem;">
+            <input type="text" placeholder="Search prompts or responses..." style="flex-grow:1; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass); border-radius:8px; color:#fff;">
+            <select style="background:#111; color:#fff; border:1px solid var(--border-glass); padding:0.75rem; border-radius:8px;">
+              <option>All Responses</option>
+              <option>Unanswered</option>
+              <option>Flagged Incorrect</option>
+            </select>
+          </div>
+
+          <div class="table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>User Query</th>
+                  <th>AI Output Preview</th>
+                  <th>Latency</th>
+                  <th>Flags</th>
+                </tr>
+              </thead>
+              <tbody id="logs-table-body">
+                <tr>
+                  <td colspan="5" style="text-align:center; padding:3rem; color:var(--text-muted);">
+                    <i data-lucide="terminal" style="width:48px; height:48px; margin-bottom:1rem; opacity:0.5; display:block; margin-left:auto; margin-right:auto;"></i>
+                    No conversations recorded.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- MODULE 6: System Preferences Settings -->
+        <section class="admin-panel" id="panel-settings">
+          <h2 class="panel-title">Console System Configurations</h2>
+          
+          <div class="config-grid">
+            <div class="config-section">
+              <h3>School & AI Custom Branding</h3>
+              <div class="input-group">
+                <label>Institution Name</label>
+                <input type="text" id="settings-inst-name" placeholder="Enter School Name" value="">
+              </div>
+              <div class="input-group">
+                <label>Virtual Companion Name</label>
+                <input type="text" id="settings-companion-name" placeholder="Enter AI Name" value="">
+              </div>
+              <div class="input-group">
+                <label>Administrative Contact Info</label>
+                <input type="email" id="settings-admin-email" placeholder="admin@school.org" value="">
+              </div>
+            </div>
+
+            <div class="config-section">
+              <h3>Disaster Backup & Recovery</h3>
+              <div style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
+                <button class="quick-action-card" id="settings-btn-backup" style="padding:1rem; text-align:left; cursor:pointer;">
+                  <strong>Backup System Database</strong>
+                  <p style="font-size:0.8rem; color:var(--text-dim);">Export all document metadata, categories, and settings.</p>
+                </button>
+                <input type="file" id="settings-file-restore" style="display:none;" accept=".gsip">
+                <button class="quick-action-card" id="settings-btn-restore" style="padding:1rem; text-align:left; cursor:pointer;">
+                  <strong>Restore Backup File</strong>
+                  <p style="font-size:0.8rem; color:var(--text-dim);">Upload a backup json file to overwrite state.</p>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="action-btn" id="settings-btn-save" style="margin-top:2rem; width:100%; justify-content:center;" disabled>
+            <i data-lucide="save"></i> Save Changes
+          </button>
+        </section>
+
+        <!-- MODULE 7: Platform Integrity & System Health -->
+        <section class="admin-panel" id="panel-health">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+            <h2 class="panel-title">System Health & Self-Healing Registry</h2>
+            <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.05); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--border-glass);">
+              <span style="font-size:0.85rem; color:var(--text-dim);">Platform Score:</span>
+              <strong style="color:var(--color-primary); font-size:1.1rem;" id="health-score">100%</strong>
+            </div>
+          </div>
+          
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+            <!-- Subsystems Status -->
+            <div class="analytics-card" style="padding:1.5rem;">
+              <h3 style="font-family:var(--font-display); font-weight:600; margin-bottom:1rem; font-size:1.1rem; color:var(--text-core);">Subsystem Status Monitor</h3>
+              <div id="subsystem-health-list" style="display:flex; flex-direction:column; gap:0.75rem;">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+            
+            <!-- Self Healing Logs -->
+            <div class="analytics-card" style="padding:1.5rem;">
+              <h3 style="font-family:var(--font-display); font-weight:600; margin-bottom:1rem; font-size:1.1rem; color:var(--text-core);">Self-Healing Activity Logs</h3>
+              <div id="health-repair-logs" style="display:flex; flex-direction:column; gap:0.75rem; max-height:300px; overflow-y:auto; padding-right:0.25rem;">
+                <p style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.85rem;">No heal operations recorded yet.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Automated Self Test -->
+          <div class="analytics-card" style="margin-top:1.5rem; padding:1.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+              <h3 style="font-family:var(--font-display); font-weight:600; font-size:1.1rem; color:var(--text-core);">Automated RAG Pipeline Self-Test</h3>
+              <button class="action-btn-sm" id="btn-run-self-test" style="background:var(--color-secondary); color:white; border:none; padding:0.5rem 1rem; border-radius:6px; cursor:pointer;">Run Self-Test</button>
+            </div>
+            <div id="self-test-results" style="display:none; flex-direction:column; gap:1rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-glass); padding:1rem; border-radius:8px;">
+              <div style="font-size:0.95rem; font-weight:600; color:var(--text-core);" id="self-test-overall-status">Status: Processing...</div>
+              <div id="self-test-logs" style="display:flex; flex-direction:column; gap:0.5rem;">
+                <!-- Step by step verification PASS/FAIL -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Knowledge Retrieval Debugger & Index Inspector -->
+          <div class="analytics-card" style="margin-top:1.5rem; padding:1.5rem;">
+            <h3 style="font-family:var(--font-display); font-weight:600; margin-bottom:1rem; font-size:1.1rem; color:var(--text-core);">Knowledge Retrieval Debugger & Index Inspector</h3>
+            <div style="display:flex; gap:1rem; align-items:center; margin-bottom:1rem;">
+              <select id="health-debugger-doc-select" style="padding:0.5rem; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass); border-radius:6px; color:var(--text-core); outline:none; flex:1;">
+                <option value="">Select a document to trace...</option>
+              </select>
+              <button class="action-btn-sm" id="btn-run-diag" style="background:var(--color-primary); color:white; border:none; padding:0.5rem 1rem; border-radius:6px; cursor:pointer;">Run Trace</button>
+            </div>
+            
+            <div id="health-debugger-results" style="display:none; flex-direction:column; gap:1rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-glass); padding:1rem; border-radius:8px;">
+              <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; font-size:0.85rem; border-bottom: 1px solid var(--border-glass); padding-bottom:1rem;">
+                <div><strong>Pages:</strong> <span id="diag-pages">0</span></div>
+                <div><strong>Characters:</strong> <span id="diag-chars">0</span></div>
+                <div><strong>Chunks:</strong> <span id="diag-chunks">0</span></div>
+                <div><strong>Verification:</strong> <span id="diag-verification">Pending</span></div>
+              </div>
+              <div style="font-size:0.85rem;">
+                <strong>Extracted Text Preview (First 300 chars):</strong>
+                <pre id="diag-text-preview" style="background:rgba(0,0,0,0.2); padding:0.75rem; border-radius:6px; overflow-x:auto; white-space:pre-wrap; margin-top:0.25rem; font-family:var(--font-mono); color:var(--text-dim); max-height:100px; overflow-y:auto;"></pre>
+              </div>
+              <div style="font-size:0.85rem; border-top: 1px solid var(--border-glass); padding-top:1rem;">
+                <strong>Retrieval Trace Log:</strong>
+                <div id="diag-trace-log" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem;">
+                  <!-- List of verification stages -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Modal: Upload Document -->
+  <div class="login-overlay" id="uploadDocModal" style="display:none; justify-content:center; align-items:center; z-index:1000;">
+    <div style="background:var(--bg-card-glass); border:1px solid var(--border-glass); backdrop-filter:blur(30px); border-radius:12px; padding:2rem; width:450px; box-shadow:var(--shadow-soft-lg); display:flex; flex-direction:column; gap:1.25rem;">
+      <h3 style="margin:0; font-family:var(--font-display); color:var(--text-core);">Upload School Documents</h3>
+      <div class="input-group">
+        <label>Select Files</label>
+        <input type="file" id="uploadFileInput" multiple style="width:100%; padding:0.5rem; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass); border-radius:6px; color:var(--text-core);">
+      </div>
+      <div class="input-group">
+        <label>Category Assignment</label>
+        <select id="uploadCategorySelect" style="width:100%; padding:0.5rem; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass); border-radius:6px; color:var(--text-core); outline:none;">
+          <option value="Uncategorized">Uncategorized</option>
+        </select>
+      </div>
+      <div id="uploadProgressContainer" style="display:none; font-size:0.85rem; color:var(--color-primary);">
+        <span id="uploadStatusText">Uploading...</span>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:0.5rem;">
+        <button class="action-btn" id="btnCancelUpload" style="background:transparent; border:1px solid var(--border-glass); color:var(--text-core);">Cancel</button>
+        <button class="action-btn" id="btnStartUpload" style="background:var(--color-primary); color:white;">Upload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Category -->
+  <div class="login-overlay" id="addCategoryModal" style="display:none; justify-content:center; align-items:center; z-index:1000;">
+    <div style="background:var(--bg-card-glass); border:1px solid var(--border-glass); backdrop-filter:blur(30px); border-radius:12px; padding:2rem; width:400px; box-shadow:var(--shadow-soft-lg); display:flex; flex-direction:column; gap:1.25rem;">
+      <h3 style="margin:0; font-family:var(--font-display); color:var(--text-core);">Add Knowledge Category</h3>
+      <div class="input-group">
+        <label>Category Name</label>
+        <input type="text" id="categoryNameInput" placeholder="e.g. Admission, Timings, Holidays" style="width:100%; padding:0.5rem; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass); border-radius:6px; color:var(--text-core); outline:none;">
+      </div>
+      <div class="input-group">
+        <label>Description</label>
+        <textarea id="categoryDescInput" placeholder="Brief explanation of category files..." rows="3" style="width:100%; padding:0.5rem; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass); border-radius:6px; color:var(--text-core); outline:none; font-family:inherit; resize:vertical;"></textarea>
+      </div>
+      <div class="input-group">
+        <label>Category Accent Color</label>
+        <input type="color" id="categoryColorInput" value="#06b6d4" style="width:100%; height:40px; border:none; background:none; cursor:pointer;">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:0.5rem;">
+        <button class="action-btn" id="btnCancelCategory" style="background:transparent; border:1px solid var(--border-glass); color:var(--text-core);">Cancel</button>
+        <button class="action-btn" id="btnSaveCategory" style="background:var(--color-primary); color:white;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack Container -->
+  <div class="notification-container" id="toastContainer" style="position:fixed; bottom:2rem; right:2rem; z-index:999; display:flex; flex-direction:column; gap:0.5rem;" aria-live="polite"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="shared/config.js"></script>
+  <script src="shared/shared.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

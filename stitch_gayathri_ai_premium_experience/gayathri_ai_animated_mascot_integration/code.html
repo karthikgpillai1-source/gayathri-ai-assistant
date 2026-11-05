@@ -1,0 +1,305 @@
+<!DOCTYPE html><html class="light" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#f7f5ff",
+                        "tertiary-container": "#6069c3",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#343d96",
+                        "surface-container-low": "#f2f4f6",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-container": "#006573",
+                        "secondary": "#006876",
+                        "surface-dim": "#d8dadc",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1e",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed": "#e0e0ff",
+                        "on-primary-fixed-variant": "#003ab3",
+                        "outline-variant": "#c3c5d8",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#b6c4ff",
+                        "tertiary-fixed-dim": "#bdc2ff",
+                        "surface": "#f7f9fb",
+                        "outline": "#737687",
+                        "surface-variant": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "background": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "tertiary": "#4650a9",
+                        "primary-fixed": "#dce1ff",
+                        "on-primary-fixed": "#001550",
+                        "on-tertiary-fixed": "#000767",
+                        "on-secondary-fixed": "#001f25",
+                        "on-background": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#004e59",
+                        "secondary-container": "#58e6ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "primary": "#0049db",
+                        "secondary-fixed": "#a1efff",
+                        "surface-tint": "#004ee8",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-container": "#f8f5ff",
+                        "on-surface-variant": "#434656",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "primary-container": "#2962ff",
+                        "secondary-fixed-dim": "#44d8f1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-margin": "40px",
+                        "base": "8px",
+                        "max-width-desktop": "1200px",
+                        "message-gap": "16px",
+                        "container-padding": "24px",
+                        "max-width-chat": "800px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "mono-code": ["Geist"],
+                        "label-sm": ["Geist"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "display-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "mono-code": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    }catch(_e){}</script></head><body class="font-body-md text-on-surface">
+<!-- Subtle WebGL Shader Background -->
+
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-primary/5 h-16 flex items-center justify-between px-container-padding">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[24px]">school</span>
+</div>
+<div class="flex flex-col">
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight leading-none">Gayathri AI</h1>
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest opacity-70">Central School</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 p-0.5">
+<img alt="Student profile" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhFFjnMwO6msnPKuqsEA1bv9_N0_sbeEBXVQR1gnoXcwwfWm42y9PAvb1xSEZBNKZCJy_KsfroM2IzE0GcIb7FX4nTrRifGbbO7boxyCNxWDAYtYTmO9JYRlKM-vswyfyHqOWU3pySE57kvZM4UJOUkvVRKNXMtjH4GguAxBxK_1smckz6C_ZvYNHdPz7inER1N6FiwB1h4d5mysG9XoURTqxOEnHnANCLQYtynBwLsB9zP_TwY8yWvg">
+</div>
+</div>
+</header>
+<main class="relative z-10 pt-24 pb-32 px-container-padding max-w-max-width-desktop mx-auto">
+<!-- Welcome Hero Section -->
+<section class="flex flex-col items-center text-center mb-12">
+<div class="mascot-container mb-6">
+<img alt="Gayathri AI Mascot" class="w-56 h-56 md:w-72 md:h-72 object-contain mascot-animated mix-blend-screen" src="https://lh3.googleusercontent.com/aida/AP1WRLuBtPR2MIvd2-6ZWAZLO-SOIDOFuTYpClr9-iIUmCH-G3W-ooZgOKJQaWMaGZxgSX-0sYYVi9tKh8DXDHZn7EEjrVhBidOOmfHVPqxSUlqiuGA6Lwa2Hn9WFkEAv9uKmLrdDIUmWZ4eyDhdObd7_yoVPy4AF1h5_lMl0VFvQBPzX-ZjB5GKJsSeQb-O9vacZcT1WCAQYuyUG7BLJ6Y8m098hX5gTpgUwbQ7OITLjaD-gckDnP_F4En60HeN">
+</div>
+<div class="space-y-2">
+<h2 class="font-body-lg text-body-lg text-primary font-medium opacity-80" id="dynamic-greeting">Good Morning, Alex</h2>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface tracking-tight">
+                    I'm <span class="text-primary">Gayathri AI</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+                    Your intelligent school assistant. I'm here to help with your lessons, schedule, and school life.
+                </p>
+</div>
+<button class="mt-8 group relative flex items-center gap-3 bg-primary text-on-primary px-10 py-5 rounded-full font-headline-md text-headline-md primary-glow transition-all active:scale-95 shimmer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="">Start Chat</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</section>
+<!-- Quick Action Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+<!-- Admissions -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[28px]">app_registration</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">Admissions</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Join our community</p>
+</div>
+</div>
+<!-- Fees -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-fixed-dim flex items-center justify-center text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-[28px]">payments</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">Fees</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Payments &amp; history</p>
+</div>
+</div>
+<!-- Transport -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer">
+<div class="w-12 h-12 rounded-2xl bg-primary-fixed-dim flex items-center justify-center text-on-primary-fixed-variant">
+<span class="material-symbols-outlined text-[28px]">directions_bus</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">Transport</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Bus routes &amp; live</p>
+</div>
+</div>
+<!-- Homework -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container/50 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[28px]">assignment</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">Homework</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Assigned tasks</p>
+</div>
+</div>
+<!-- Events -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer">
+<div class="w-12 h-12 rounded-2xl bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined text-[28px]">event</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">Events</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">School calendar</p>
+</div>
+</div>
+<!-- Library -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-container flex items-center justify-center text-on-tertiary">
+<span class="material-symbols-outlined text-[28px]">menu_book</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">Library</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">E-books &amp; journals</p>
+</div>
+</div>
+<!-- Innovation Hub -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer col-span-1">
+<div class="w-12 h-12 rounded-2xl bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-[28px]">lightbulb</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">Innovation Hub</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">STEM projects</p>
+</div>
+</div>
+<!-- News -->
+<div class="glass-card p-6 rounded-lg flex flex-col items-start gap-4 cursor-pointer">
+<div class="w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[28px]">newspaper</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-body-md font-bold text-on-surface">News</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Daily announcements</p>
+</div>
+</div>
+</section>
+<!-- Dynamic Content Area (Bento style) -->
+<section class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 glass-card p-8 rounded-lg">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Today's Schedule</h3>
+<span class="text-primary font-medium text-body-md flex items-center gap-1 cursor-pointer">Full view <span class="material-symbols-outlined text-[20px]">chevron_right</span></span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/10">
+<span class="text-label-sm font-label-sm text-primary font-bold">08:30 AM</span>
+<div class="w-[2px] h-8 bg-primary/20"></div>
+<div class="flex-1">
+<h4 class="font-body-md font-bold">Advanced Mathematics</h4>
+<p class="text-label-sm text-on-surface-variant">Block A - Room 402</p>
+</div>
+<div class="px-3 py-1 rounded-full bg-secondary-container/30 text-secondary text-label-sm">Class</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low/50">
+<span class="text-label-sm font-label-sm text-on-surface-variant">10:15 AM</span>
+<div class="w-[2px] h-8 bg-surface-variant"></div>
+<div class="flex-1 text-on-surface/60">
+<h4 class="font-body-md font-medium">Physics Lab</h4>
+<p class="text-label-sm">Science Wing - Level 2</p>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card p-8 rounded-lg flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Notice Board</h3>
+<p class="text-body-md text-on-surface-variant">Latest update from the Principal's office.</p>
+</div>
+<div class="mt-6 p-4 rounded-2xl bg-error-container/20 border border-error/10">
+<div class="flex items-center gap-2 text-error mb-2">
+<span class="material-symbols-outlined text-[20px]">priority_high</span>
+<span class="font-bold text-label-sm uppercase tracking-wider">Urgent</span>
+</div>
+<p class="text-body-md font-medium text-on-surface">Sports day shifted to next Friday due to weather forecasts.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-t border-white/20 shadow-[0_-4px_20px_rgba(0,73,219,0.1)] rounded-t-lg flex justify-around items-center h-20 px-4 pb-safe">
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-2xl px-4 py-1 scale-110 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-sm text-label-sm">New Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-sm text-label-sm">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script class="">
+        // Dynamic Greeting Logic
+        function setGreeting() {
+            const greetingElement = document.getElementById('dynamic-greeting');
+            const hour = new Date().getHours();
+            let greeting = "Good Morning, Alex";
+            
+            if (hour >= 12 && hour < 17) {
+                greeting = "Good Afternoon, Alex";
+            } else if (hour >= 17) {
+                greeting = "Good Evening, Alex";
+            }
+            
+            greetingElement.textContent = greeting;
+        }
+        
+        window.onload = setGreeting;
+
+        // Interaction Feedback
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.98) translateY(0px)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+        });
+    </</script></body></html>

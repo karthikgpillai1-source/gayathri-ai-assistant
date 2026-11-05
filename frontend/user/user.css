@@ -1,0 +1,81 @@
+/* User Portal specific CSS rules */
+.workspace-tabs .tab-btn {
+  transition: all 0.2s ease;
+  position: relative;
+  opacity: 0.6;
+}
+.workspace-tabs .tab-btn:hover {
+  opacity: 0.9;
+  color: var(--text-core);
+}
+.workspace-tabs .tab-btn.active {
+  color: var(--color-secondary) !important;
+  opacity: 1;
+}
+.workspace-tabs .tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-secondary);
+  box-shadow: 0 0 8px var(--color-secondary);
+}
+
+/* Responsive workspace bottom sheet/collapsible layout */
+@media (max-width: 768px) {
+  .os-layout {
+    flex-direction: column !important;
+  }
+  #workspacePanel {
+    min-width: 100% !important;
+    height: 400px !important;
+    margin-top: 1rem;
+  }
+}
+
+/* Custom GSIP Dark Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark-core, #05060f) !important;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-secondary, #06b6d4) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #08d9fd !important;
+}
+
+/* Apply scrollbar and remove default browser scrollbar styling */
+.companion-focus-panel,
+#workspaceContent,
+#workspaceContent *,
+.conversation-thread,
+.speech-card,
+#docTextViewer,
+.overlay-body,
+body,
+html,
+textarea,
+div {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--color-secondary, #06b6d4) var(--bg-dark-core, #05060f) !important;
+}
+
+/* Tab highlight pulse animation */
+@keyframes tabPulse {
+  0% { box-shadow: 0 0 0px var(--color-secondary); transform: scale(1); }
+  50% { box-shadow: 0 0 12px var(--color-secondary); transform: scale(1.05); }
+  100% { box-shadow: 0 0 0px var(--color-secondary); transform: scale(1); }
+}
+.workspace-tabs .tab-btn.tab-highlight {
+  animation: tabPulse 1.2s ease-in-out;
+  color: var(--color-secondary) !important;
+  opacity: 1 !important;
+}
+

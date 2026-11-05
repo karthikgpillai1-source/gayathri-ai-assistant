@@ -1,0 +1,49 @@
+{
+  "general": {
+    "institution_name": "lolu school",
+    "ai_companion_name": "lol",
+    "contact_email": "admin@lolu.com",
+    "contact_phone": "+919876543210",
+    "office_address": "Gayathri Campus, Trivandrum, Kerala"
+  },
+  "ai": {
+    "current_model": "llama3.2:latest",
+    "temperature": 0.7,
+    "max_context": 4096,
+    "streaming": true,
+    "max_tokens": 2048,
+    "response_timeout": 30,
+    "allow_general_knowledge": false
+  },
+  "kb": {
+    "supported_file_types": [
+      "pdf",
+      "txt",
+      "docx"
+    ],
+    "max_upload_size_mb": 10,
+    "auto_reindex": true,
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "embedding_model": "nomic-embed-text",
+    "auto_document_processing": true,
+    "categories": [],
+    "documents": []
+  },
+  "security": {
+    "session_timeout_minutes": 30,
+    "jwt_expiration_hours": 24,
+    "password_policy": "medium",
+    "admin_login_attempts": 5,
+    "account_lock_duration_seconds": 900,
+    "role_defaults": "standard"
+  },
+  "branding": {
+    "school_logo": "shared/logo.png",
+    "ai_mascot": "shared/mascot.png",
+    "accent_color": "#06b6d4",
+    "school_motto": "Innovation through Inclusivity",
+    "favicon": "shared/favicon.ico",
+    "welcome_message": "Welcome back. I am {{assistant_name}}. Ask me anything about school policies, admission, innovation lab launches, or timings."
+  }
+}
